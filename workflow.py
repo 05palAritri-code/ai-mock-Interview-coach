@@ -3,30 +3,34 @@ from langgraph.graph import StateGraph, START, END
 from question import generate_question
 from evalutor import evaluator_answer,question_type,follow_question,route_evaluation
 from feedback import final_feedbacks
-
-opening_graph = StateGraph(InterviewState)
-
-opening_graph.add_node("interviewer", generate_question)
-opening_graph.add_edge(START, "interviewer")
-opening_graph.add_edge("interviewer", END)
-
-opening_flow = opening_graph.compile()
-
-turn_graph = StateGraph(InterviewState)
-
-turn_graph.add_node("evaluator", evaluator_answer)
-turn_graph.add_node("followup question type", question_type)
-turn_graph.add_node("followup question" , follow_question)
-turn_graph.add_node("coach", final_feedbacks)
+from langgraph.types import interrupt, Command
+from langgraph.checkpoint.memory import MemorySaver
 
 
-turn_graph.add_edge(START, "evaluator")
+def get_answer(state: InterviewState):
+    answer = interrupt({"question": state["question"]})
+    return {"answers": [answer]}
 
-turn_graph.add_conditional_edges('evaluator', route_evaluation, {'next question': 'followup question type' , 'finish': 'coach'})
+graph = StateGraph(InterviewState)
 
-turn_graph.add_edge("followup question type", "followup question")
-turn_graph.add_edge("follow_question", END)
+graph.add_node("interviewer", generate_question)
+graph.add_node("get_answer", get_answer)
+graph.add_node("evaluator", evaluator_answer)
+graph.add_node("question_type", question_type)
+graph.add_node("followup_question" , follow_question)
+graph.add_node("coach", final_feedbacks)
 
-turn_graph.add_edge("coach", END)
+graph.add_edge(START, "interviewer")
+graph.add_edge("interviewer", "get_answer")
+graph.add_edge("get_answer", "evaluator")
 
-workflowline = turn_graph.compile()
+graph.add_conditional_edges('evaluator', route_evaluation, {'next question': 'question_type' , 'finish': 'coach'})
+
+graph.add_edge("question_type", "followup_question")
+graph.add_edge("followup_question", "get_answer")
+graph.add_edge("followup_question", END)
+
+graph.add_edge("coach", END)
+
+checkpointer = MemorySaver()
+workflowline = graph.compile(checkpointer=checkpointer)

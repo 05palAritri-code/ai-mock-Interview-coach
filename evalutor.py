@@ -1,5 +1,4 @@
 from llm_manager import eval_agent , question_pattern_agent ,question_agent
-from workflow import workflowline
 from chatstate import InterviewState
 from prompt import get_evaluate_messages, get_followup_type_messages, get_followup_question_messages
 
