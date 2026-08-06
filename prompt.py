@@ -1,21 +1,26 @@
 from langchain_core.messages import SystemMessage, HumanMessage
 from langgraph.graph import state
 
-interview_messages = [
-        SystemMessage(content=f"""you are mock interview coach help student/employee/workingprofessinoal,
-you conduct profficient interview session of roughly 5–7 turns with intelligent follow-ups (not just a
+
+def get_interview_messages(state):
+    return [
+        SystemMessage(content=f"""you are mock interview coach conducting profficient interview session of roughly 5–7 turns with intelligent follow-ups (not just a
 fixed question list) and one after one ."""),
         HumanMessage(content=f"""
 conduct a interview based on , job description : "{state['job_description']}"
 - my Job role is "{state['target_role']}" and interview type should be "{state['focous_area']}"
+Ask only the first interview question. No commentary, no answer.
 """)
     ]
 
 
-evaluate_message = [
+def get_evaluate_messages(state):
+    last_answer = state['answers'][-1] if state.get('answers') else ""
+    return [
         SystemMessage(content=f"""you are interview answer evaluator, you evaluate answer based on technicality , relevancy , confidence and 
         specificity and give number out of 10"""),
-        HumanMessage(content=f"""evaluate the answer "{state['answers[-1]']}"
+        HumanMessage(content=f"""evaluate the answer "{state['answers[-1]']}" and Question asked: "{state['question']}"
+
         Use the criteria below to evaluate the answer :
         -how technically correct
         -relevency to the question
@@ -36,8 +41,8 @@ evaluate_message = [
 
 """)
     ]
-
-followup_question_type = [
+def get_followup_type_messages(state):
+    return [
         SystemMessage(content=f"""you are a type indicator for follow-up questuion """),
         HumanMessage(content=f"""determine the follow-up question type based on the following factors 
         -technical_score : "{state['technical']}" scores for "{state['question_count']}"
@@ -55,13 +60,16 @@ followup_question_type = [
 """)
     ]
 
-followup_question = [
+
+def get_followup_question_messages(state):
+    return [
     SystemMessage(content=f"""you generate follow-up question for interview session"""),
     HumanMessage(content=f"""genarate the next question based on 
 
     ##keep in mind##
     -candidate's job role : "{state['target_role']}"
-    -interview type : "{state['job_description']}"
+    -Job description: "{state.get('job_description', 'Not provided')}"
+    -interview type : "{state['focus_area']}"
 
     ## the instruction needed to follow ##
     -instruction : "{state['follow_up_question_type']}" , and 
@@ -75,7 +83,8 @@ followup_question = [
     """)
 ]
 
-coach_message = [
+def get_coach_messages(state):
+    return [
     SystemMessage(content=f"""you are a interview coach, you generate overall feedback for the candidate performance"""),
     HumanMessage(content=f"""genarate interview session feedback in multiple dimensions, not just good or bad
 

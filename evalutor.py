@@ -1,13 +1,12 @@
 from llm_manager import eval_agent , question_pattern_agent ,question_agent
 from workflow import workflowline
 from chatstate import InterviewState
-from prompt import evaluate_message,followup_question_type,followup_question
-from feedback import final_feedbacks
+from prompt import get_evaluate_messages, get_followup_type_messages, get_followup_question_messages
+
 def evaluator_answer(state:InterviewState):
 
-    message = evaluate_message
     
-    response = eval_agent.invoke(message)
+    response = eval_agent.invoke(get_evaluate_messages(state))
 
     state['technical_scores']=response.technical
     state['relevance_scores']=response.relevant
@@ -25,31 +24,31 @@ def evaluator_answer(state:InterviewState):
         }
 
 def route_evaluation(state:InterviewState):
-    count = state['question_count']
-    if count==state['max_count']:
-        return 'final_feedbacks'
-    else:
-        return 'question_type'
+    return 'finish' if state['question_count'] >= state['max_count'] else 'next question'
+
+    # count = state['question_count']
+    # if count==state['max_count']:
+    #     return 'final_feedbacks'
+    # else:
+    #     return 'question_type'
     
 
 def question_type(state:InterviewState):
 
-    message = followup_question_type
-
-    response = question_pattern_agent(message)
+    response = question_pattern_agent.invoke(get_followup_type_messages(state))
 
     return{'follow_up_question_type': response.follow_up_question_type}
 
 def follow_question(state:InterviewState):
 
-    state['overall_score'] = (state['technical']+state['relevant']+state['confident']+state['specificity'])/4
+    overall = (state['technical']+state['relevant']+state['confident']+state['specificity'])/4
+    response = question_agent.invoke(get_followup_question_messages(state))
 
-    message = followup_question
-
-    response = question_agent.invoke(message)
-
-    state['question_count'] =+1
-    return
+    return {
+        'question': response.question,
+        'question_count': state['question_count'] + 1,
+        'overall_score': overall
+    }
 
 
 

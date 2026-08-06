@@ -1,16 +1,12 @@
 
 from workflow import workflowline
 from chatstate import InterviewState
-from prompt import interview_messages
-from llm_manager import llm
+from prompt import get_interview_messages
+from llm_manager import question_agent
 
 def generate_question(state: InterviewState):
 
-    # prompt
-    messages = interview_messages
-
-    # send generator_llm
-    response = llm.invoke(messages).content
+    response = question_agent.invoke(get_interview_messages(state))
 
     # return response
-    return {'question': response}
+    return {'question': response.question}
