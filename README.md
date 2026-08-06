@@ -15,9 +15,6 @@ Multi-agent AI interview system built for an AI Engineer Internship Assignment.
 - LangGraph
 
 ```mermid
-  flowchart:
-    curve: linear
----
 graph TD;
         __start__([<p>__start__</p>]):::first
         interviewer(interviewer)
