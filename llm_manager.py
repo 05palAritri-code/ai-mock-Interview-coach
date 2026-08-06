@@ -19,11 +19,11 @@ llm1 = ChatOpenAI(
     model="gemma-3-27b-it",
     api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1",
-    temperature=0,      
+    temperature=0.1,      
     timeout=15,         
     max_retries=2
 )
-question_agent = llm.with_structured_output(InterviewQuestion)
-eval_agent = llm.with_structured_output(Evaluation)
-question_pattern_agent = llm1.with_structured_output(FollowupQuestionType)
-coach_agent = llm.with_structured_output(FinalFeedback)
+question_agent = llm.with_structured_output(InterviewQuestion,method="json_mode")
+eval_agent = llm.with_structured_output(Evaluation,method="json_mode")
+question_pattern_agent = llm1.with_structured_output(FollowupQuestionType,method="json_mode")
+coach_agent = llm.with_structured_output(FinalFeedback,method="json_mode")

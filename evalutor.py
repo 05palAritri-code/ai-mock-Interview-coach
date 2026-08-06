@@ -1,6 +1,12 @@
 from llm_manager import eval_agent , question_pattern_agent ,question_agent
 from chatstate import InterviewState
 from prompt import get_evaluate_messages, get_followup_type_messages, get_followup_question_messages
+from langgraph.types import interrupt
+
+
+def get_answer(state: InterviewState):
+    answer = interrupt({"question": state["question"]})
+    return {"answers": [answer]}
 
 def evaluator_answer(state:InterviewState):
 

@@ -1,15 +1,12 @@
 from chatstate import InterviewState
 from langgraph.graph import StateGraph, START, END
 from question import generate_question
-from evalutor import evaluator_answer,question_type,follow_question,route_evaluation
+from evalutor import evaluator_answer,question_type,follow_question,route_evaluation,get_answer
 from feedback import final_feedbacks
-from langgraph.types import interrupt, Command
 from langgraph.checkpoint.memory import MemorySaver
 
 
-def get_answer(state: InterviewState):
-    answer = interrupt({"question": state["question"]})
-    return {"answers": [answer]}
+
 
 graph = StateGraph(InterviewState)
 

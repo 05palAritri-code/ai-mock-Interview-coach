@@ -1,7 +1,6 @@
 import uuid
 from workflow import workflowline
 from langgraph.types import Command
-from datetime import datetime
 
 if __name__ == "__main__":
     print("AI Mock Interview Coach\n")
