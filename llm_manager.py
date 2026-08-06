@@ -1,7 +1,7 @@
 import os 
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
-from schema import Evaluation ,InterviewQuestion,FinalFeedback,QuestionType
+from schema import Evaluation ,InterviewQuestion,FinalFeedback,FollowupQuestionType
 
 load_dotenv()
 
@@ -25,5 +25,5 @@ llm1 = ChatOpenAI(
 )
 question_agent = llm.with_structured_output(InterviewQuestion)
 eval_agent = llm.with_structured_output(Evaluation)
-question_pattern_agent = llm.with_structured_output(QuestionType)
-coach_agent = llm1.with_structured_output(FinalFeedback)
+question_pattern_agent = llm1.with_structured_output(FollowupQuestionType)
+coach_agent = llm.with_structured_output(FinalFeedback)

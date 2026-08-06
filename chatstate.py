@@ -1,6 +1,6 @@
 from typing import TypedDict,Annotated
 import operator
-
+from langgraph.graph.message import add_messages
 from typing import List, Literal
 from pydantic import BaseModel,Field
 
@@ -12,7 +12,8 @@ class InterviewState(TypedDict):
     job_description: str | None = None
     focus_area: Literal["behavioral", "technical", "case", "mixed"]
 
-    conversation: Annotated[List[dict],operator.add]
+    question: str
+    answers: Annotated[List[dict],add_messages]
 
     technical : int
     relevant : int
@@ -24,16 +25,16 @@ class InterviewState(TypedDict):
     confidence_scores: Annotated[list[int], operator.add]
     specificity_scores: Annotated[list[int], operator.add]
 
-    strengths: Annotated[list[str],operator.add]
-    weakness :  Annotated[list[str],operator.add]
+    strengths: Annotated[list[str],add_messages]
+    weakness :  Annotated[list[str],add_messages]
 
     overall_score: float
+
+    follow_up_question_type: Literal['need to probe deeper' , 'move to next one' , 'calibarate difficulty']
     
 
-    evaluate_history: Annotated[list[str], operator.add]
+    decision: Literal['next question','finish']
 
-    decision: Literal['interview_question','finish']
+    question_count: int = 1
 
-    question_count: int = 0
-    followup_count: int = 0
     max_count: int = 7
