@@ -143,3 +143,39 @@ The report includes:
 - Final recommendation
 
 ---
+## Agent Orchestration
+
+The system is orchestrated using **LangGraph**, where each agent is represented as an independent node in a stateful workflow. A shared `InterviewState` object carries the interview context, candidate responses, evaluation results, and intermediate data between agents.
+
+The execution flow is as follows:
+
+1. **Interviewer Agent**
+   - Generates the initial interview question based on the target role, optional job description, and selected interview focus area.
+
+2. **Answer Collection**
+   - The candidate submits an answer, which is stored in the shared interview state.
+
+3. **Evaluation Agent**
+   - Evaluates the candidate's response across four dimensions:
+     - Technical correctness
+     - Relevance
+     - Confidence
+     - Specificity
+   - It also identifies key strengths and weaknesses.
+
+4. **Follow-up Decision Agent**
+   - Analyzes the evaluation results and decides whether to:
+     - Probe deeper into the current topic,
+     - Move to the next topic, or
+     - Adjust the interview difficulty.
+
+5. **Follow-up Question Agent**
+   - Generates an adaptive follow-up question based on the previous answer, evaluation scores, strengths, weaknesses, and the decision made by the Follow-up Decision Agent.
+
+6. **Loop Controller**
+   - The workflow repeats the Answer → Evaluation → Decision → Follow-up cycle until the configured maximum number of interview questions is reached.
+
+7. **Feedback Agent**
+   - After the interview is complete, this agent aggregates the evaluation scores from all responses and generates a comprehensive feedback report, including strengths, areas for improvement, an overall assessment, a personalized practice plan, and a recommendation.
+
+By separating responsibilities across specialized agents and coordinating them through a shared state, the system remains modular, maintainable, and easy to extend with additional capabilities such as resume-based RAG, web search, or voice interaction.
