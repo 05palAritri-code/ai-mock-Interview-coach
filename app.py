@@ -33,7 +33,21 @@ if __name__ == "__main__":
         state["question_count"] = result.get("question_count", state["question_count"])
 
     print("\n=== Final Feedback ===")
-    print(f"Strengths:\n{result['strong_points']}")
-    print(f"\nWeaknesses:\n{result['weak_point']}")
+    # print(f"Strengths:\n{result['strong_points']}")
+    # print(f"\nWeaknesses:\n{result['weak_points']}")
+    print("\nStrengths:")
+    for point in result["strong_points"]:
+        print(f"• {point}")
+    print("\n")
+    print("\nWeaknesses:")
+    for point in result["weak_points"]:
+        print(f"• {point}")
+    print("\n")
+    print(f"\nScores ")
+    print(f"\nTechnical Score : {['technical']}")
+    print(f"\nRelevancy Score : {['relevant']}")
+    print(f"\nConfidence Score : {['confident']}")
+    print(f"\nspecificity Score : {['specificity']}")
+    print("\n")
     print(f"\nPractice plan:\n{result['practice_plan']}")
     print(f"\nRecommendation:\n{result['recommendation']}")

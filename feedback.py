@@ -9,15 +9,15 @@ def final_feedbacks(state:InterviewState):
     r=len(state['confidence_scores'])
     s=len(state['specificity_scores'])
     
-    a= sum(state['technical_scores'])//p
-    b= sum(state['relevance_scores'])//q
-    c= sum(state['confidence_scores'])//r
-    d= sum(state['specificity_scores'])//s
+    a= sum(state['technical_scores'])/p
+    b= sum(state['relevance_scores'])/q
+    c= sum(state['confidence_scores'])/r
+    d= sum(state['specificity_scores'])/s
     
 
     return {
         'strong_points': response.strong_points,
-        'weak_points': response.weak_point,
+        'weak_points': response.weak_points,
         'technical' : a,
         'relevant' : b,
         'confident': c,
