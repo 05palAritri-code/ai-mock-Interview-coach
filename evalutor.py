@@ -1,4 +1,4 @@
-from llm_manager import eval_agent , question_pattern_agent ,question_agent
+from llm_manager import eval_agent , question_pattern_agent ,follow_question_agent
 from chatstate import InterviewState
 from prompt import get_evaluate_messages, get_followup_type_messages, get_followup_question_messages
 from langgraph.types import interrupt
@@ -24,21 +24,29 @@ def evaluator_answer(state:InterviewState):
         'confident':response.confident,
         'specificity':response.specificity,
         'strengths':response.strengths,
-        'weakness':response.weakness,
+        'weaknesses':response.weaknesses,
         
         }
 
-def route_evaluation(state:InterviewState):
-    return 'finish' if state['question_count'] >= state['max_count'] else 'next question'
+# def route_evaluation(state:InterviewState):
+#     return 'finish' if state['question_count'] >= state['max_count'] else 'next question'
 
-    # count = state['question_count']
-    # if count==state['max_count']:
-    #     return 'final_feedbacks'
-    # else:
-    #     return 'question_type'
-    
+
+
+def route_evaluation(state: InterviewState):
+    # print("=" * 40)
+    # print("question_count:", state.get("question_count"))
+    # print("max_count:", state.get("max_count"))
+    # print("=" * 40)
+    return (
+        "finish"
+        if state["question_count"] + 1 > state["max_count"]
+        else "next question"
+    )   
 
 def question_type(state:InterviewState):
+
+    state['overall']= (state['technical']+state['relevant']+state['confident']+state['specificity'])/4
 
     response = question_pattern_agent.invoke(get_followup_type_messages(state))
 
@@ -46,13 +54,13 @@ def question_type(state:InterviewState):
 
 def follow_question(state:InterviewState):
 
-    overall = (state['technical']+state['relevant']+state['confident']+state['specificity'])/4
-    response = question_agent.invoke(get_followup_question_messages(state))
-
+    # overall = (state['technical']+state['relevant']+state['confident']+state['specificity'])/4
+    response = follow_question_agent.invoke(get_followup_question_messages(state))
+    
     return {
-        'question': response.question,
-        'question_count': state['question_count'] + 1,
-        'overall_score': overall
+        'question': response.follow_up_question,
+        'question_count': state['question_count']+1 ,
+        # 'overall_score': overall
     }
 
 

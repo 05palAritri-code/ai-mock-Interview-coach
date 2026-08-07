@@ -25,7 +25,7 @@ graph.add_conditional_edges('evaluator', route_evaluation, {'next question': 'qu
 
 graph.add_edge("question_type", "followup_question")
 graph.add_edge("followup_question", "get_answer")
-graph.add_edge("followup_question", END)
+# graph.add_edge("followup_question", END)
 
 graph.add_edge("coach", END)
 

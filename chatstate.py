@@ -1,6 +1,5 @@
 from typing import TypedDict,Annotated,List,Literal,Optional
 import operator
-from langgraph.graph.message import add_messages
 from typing import List, Literal
 from pydantic import BaseModel,Field
 
@@ -24,17 +23,17 @@ class InterviewState(TypedDict ,total=False):
     specificity_scores: Annotated[list[int], operator.add]
 
     strengths: Annotated[list[str],operator.add]
-    weakness :  Annotated[list[str],operator.add]
+    weaknesses :  Annotated[list[str],operator.add]
 
     overall_score: float
 
     follow_up_question_type: Literal['need to probe deeper' , 'move to next one' , 'calibrate difficulty']
 
-    max_count: int = 7
-    question_count: int = 1
+    max_count: int 
+    question_count: int 
 
     strong_points: str
-    weak_point: str
+    weak_points: str
     practice_plan: List[str]
     recommendation: str
 

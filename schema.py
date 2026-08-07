@@ -1,10 +1,13 @@
 from pydantic import BaseModel,Field
-from typing import Literal
-
+from typing import Literal ,Annotated , Literal
+import operator
 
 class InterviewQuestion(BaseModel):
     question: str
 
+class FollowUpQuestion(BaseModel):
+    follow_up_question: str
+    
 
 class Evaluation(BaseModel):
     technical: int = Field(description='score out of 10' ,ge=0, le=10)
@@ -13,8 +16,8 @@ class Evaluation(BaseModel):
     specificity: int = Field(description='score out of 10' ,ge=0, le=10)
     
 
-    strengths: list[str] = Field (description='Detailed strength analysis for given answer')
-    weaknesses: list[str] = Field (description='Detailed analysis for given answer')
+    strengths: list[str]= Field (description='Detailed strength analysis for given answer')
+    weaknesses: list[str]=Field (description='Detailed analysis for given answer')
     
 class FollowupQuestionType(BaseModel):
 

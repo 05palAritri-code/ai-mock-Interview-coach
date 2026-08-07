@@ -15,8 +15,9 @@ Ask only the first interview question. No commentary, no answer.
     ]
 
 
+
 def get_evaluate_messages(state):
-    last_answer = state['answers'][-1] if state.get('answers') else ""
+    last_answer = state["answers"][-1] if state.get('answers') else ""
     return [
         SystemMessage(content=f"""you are interview answer evaluator, you evaluate answer based on technicality , relevancy , confidence and 
         specificity and give number out of 10
@@ -41,17 +42,23 @@ def get_evaluate_messages(state):
     -confident : give score out of 10
     -specificity : give score out of 10
 
-    strength : explain the streangth factor for given answer in 2 3 lines
-    weakness : explain the weakness factor for given number
-    take decision based on wheather "{state['question_count']}" hit "{state['max_count']}"
-    -decision: "next question" or "finish"
+    "strengths": [
+    "point 1",
+    "point 2"
+  ],
+  "weaknesses": [
+    "point 1",
+    "point 2"
+  ]
+    
 
 
 """)
     ]
+
 def get_followup_type_messages(state):
-    a=state['strengths[-1]']
-    b=state['weekness[-1]']
+    a=state["strengths"][-1]
+    b=state["weaknesses"][-1]
     return [
         SystemMessage(content=f"""you are a type indicator for follow-up questuion ,Always respond with valid JSON only, matching the required schema exactly."""),
         HumanMessage(content=f"""determine the follow-up question type based on the following factors 
@@ -72,9 +79,9 @@ def get_followup_type_messages(state):
 
 
 def get_followup_question_messages(state):
-    x=state['strengths[-1]']
-    y=state['weakness[-1]']
-    z=state['overall_score']
+    x=state["strengths"][-1]
+    y=state["weaknesses"][-1]
+    # z=state['overall_score']
     return [
     SystemMessage(content=f"""you generate follow-up question for interview session,Always respond with valid JSON only, matching the required schema exactly."""),
     HumanMessage(content=f"""genarate the next question based on 
@@ -90,7 +97,8 @@ def get_followup_question_messages(state):
     ## the following feedbacks and scores ##
     -strenghths : "{x}"
     -weakness : "{y}
-    -overall_scores : "{state['overall_score']}"
+    **respond only in structured manner**
+    follow_up_question: give a fllowup question 
      
     
     """)
@@ -108,7 +116,7 @@ def get_coach_messages(state):
     
     ## the following feedbacks and scores ##
     -strenghths : "{state['strengths']}"
-    -weakness : "{state['weakness']}
+    -weaknesses : "{state['weakness']}
 
     - technical : "{state['technical']}" for total "{state['question_count']}"
     - relevant : "{state['relevant']}" for total "{state['question_count']}"

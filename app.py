@@ -20,7 +20,7 @@ if __name__ == "__main__":
         "confidence_scores": [],
         "specificity_scores": [],
         "question_count": 1,
-        "max_count": 7,
+        "max_count": 6,
     }
     config = {"configurable": {"thread_id": str(uuid.uuid4())}}
     result = workflowline.invoke(state, config=config)
