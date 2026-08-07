@@ -67,8 +67,8 @@ def get_followup_type_messages(state):
         -confident : "{state['confident']}" scores for "{state['question_count']}"
         -specificity : "{state['specificity']}" scores for "{state['question_count']}"
         and 
-        -strength_area : "{a}"
-        -weakness_area : "{b}"
+        - strengths "{a}"
+        - weaknesses "{b}"
         
 
         ### Respond ONLY in structured format:
@@ -96,7 +96,7 @@ def get_followup_question_messages(state):
 
     ## the following feedbacks and scores ##
     -strenghths : "{x}"
-    -weakness : "{y}
+    -weaknesses : "{y}"
     **respond only in structured manner**
     follow_up_question: give a fllowup question 
      
@@ -116,7 +116,7 @@ def get_coach_messages(state):
     
     ## the following feedbacks and scores ##
     -strenghths : "{state['strengths']}"
-    -weaknesses : "{state['weakness']}
+    -weaknesses : "{state['weaknesses']}"
 
     - technical : "{state['technical']}" for total "{state['question_count']}"
     - relevant : "{state['relevant']}" for total "{state['question_count']}"
@@ -124,11 +124,11 @@ def get_coach_messages(state):
     - specificity : "{state['specificity']}" for total "{state['question_count']}"
 
     ### Respond ONLY in structured format:
-    - strong_points : describe in bullet patten
-    - weak_points : describe in bullet patten
+    - strong_points : ["<list of strengths>"]
+    - weak_points : ["<list of weaknesses>"]
     - technical_score: float
-    - relevance_score : float
-    - confidence_score : float
+    - relevant_score : float
+    - confident_score : float
     - clarity_score: float
     - practice_plan: expkain well
     - recommendation: describe in 3 4 line 

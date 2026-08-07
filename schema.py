@@ -25,14 +25,14 @@ class FollowupQuestionType(BaseModel):
 
 class FinalFeedback(BaseModel):
 
-    strong_points : str = Field(description='describe in bullet patten')
-    weak_points : str = Field(description='describe in bullet patten')
+    strong_points: list[str] = Field(description='describe in bullet patten')
+    weak_points: list[str] = Field(description='describe in bullet patten')
 
-    technical: int
-    relevant : int
-    confident : int
-    specificity : int
+    technical_score: float
+    relevant_score: float
+    confident_score: float
+    clarity_score: float
 
-    practice_plan: list[str]
+    practice_plan: str
 
     recommendation: str

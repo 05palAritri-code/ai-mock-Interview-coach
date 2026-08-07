@@ -12,10 +12,10 @@ class InterviewState(TypedDict ,total=False):
     question: str
     answers: Annotated[List[dict],operator.add]
 
-    technical : int
-    relevant : int
-    confident : int
-    specificity : int
+    technical : float
+    relevant : float
+    confident : float
+    specificity : float
 
     technical_scores: Annotated[list[int], operator.add]
     relevance_scores: Annotated[list[int], operator.add]
